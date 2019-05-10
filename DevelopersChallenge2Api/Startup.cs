@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevelopersChallenge2Api
 {
@@ -26,6 +27,16 @@ namespace DevelopersChallenge2Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddDbContext<ApplicationDatabaseContext>(options =>
+            {
+                var connectionString = Environment.GetEnvironmentVariable("DB_CONNSTRING");
+
+                if (string.IsNullOrEmpty(connectionString)) {
+                    throw new InvalidOperationException("The 'DB_CONNSTRING' environment variable must be set.");
+                }
+
+                options.UseSqlite(connectionString);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
