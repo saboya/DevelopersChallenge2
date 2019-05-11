@@ -30,13 +30,8 @@ namespace DevelopersChallenge2Api
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<ApplicationDatabaseContext>(options =>
             {
-                var connectionString = Environment.GetEnvironmentVariable("DB_CONNSTRING");
-
-                if (string.IsNullOrEmpty(connectionString)) {
-                    throw new InvalidOperationException("The 'DB_CONNSTRING' environment variable must be set.");
-                }
-
-                var sqliteConnection = new SqliteConnection(connectionString);
+                var temp = Configuration.GetConnectionString("ApplicationDatabase");
+                var sqliteConnection = new SqliteConnection(temp);
                 sqliteConnection.Open();
                 options.UseSqlite(sqliteConnection);
             });
