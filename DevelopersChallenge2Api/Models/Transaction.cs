@@ -1,10 +1,11 @@
-using System;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-
 namespace DevelopersChallenge2Api.Models
 {
-  public class Transaction {
+  using System;
+  using System.ComponentModel.DataAnnotations;
+  using Microsoft.EntityFrameworkCore;
+
+  public class Transaction
+  {
     [Key]
     public int Id { get; set; }
   }

@@ -1,29 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.Sqlite;
-
-namespace DevelopersChallenge2Api
+﻿namespace DevelopersChallenge2Api
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.HttpsPolicy;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Data.Sqlite;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
+
     public class Startup
     {
-        static SqliteConnection _applicationDatabaseContextSqliteConnection;
+        private static SqliteConnection applicationDatabaseContextSqliteConnection;
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
-            _applicationDatabaseContextSqliteConnection = new SqliteConnection(Configuration.GetConnectionString("ApplicationDatabase"));
-            _applicationDatabaseContextSqliteConnection.Open();
+            this.Configuration = configuration;
+            applicationDatabaseContextSqliteConnection = new SqliteConnection(this.Configuration.GetConnectionString("ApplicationDatabase"));
+            applicationDatabaseContextSqliteConnection.Open();
         }
 
         public IConfiguration Configuration { get; }
@@ -34,7 +34,7 @@ namespace DevelopersChallenge2Api
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<ApplicationDatabaseContext>(options =>
             {
-                options.UseSqlite(_applicationDatabaseContextSqliteConnection);
+                options.UseSqlite(applicationDatabaseContextSqliteConnection);
             });
         }
 
