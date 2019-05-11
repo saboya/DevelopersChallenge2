@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 
 namespace DevelopersChallenge2Api
 {
@@ -35,7 +36,9 @@ namespace DevelopersChallenge2Api
                     throw new InvalidOperationException("The 'DB_CONNSTRING' environment variable must be set.");
                 }
 
-                options.UseSqlite(connectionString);
+                var sqliteConnection = new SqliteConnection(connectionString);
+                sqliteConnection.Open();
+                options.UseSqlite(sqliteConnection);
             });
         }
 
