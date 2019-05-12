@@ -43,7 +43,11 @@ namespace DevelopersChallenge2Api.Util
         public static IEnumerable<Transaction> ParseFile(string filePath)
         {
             FileStream fileStream = new FileStream(filePath, FileMode.Open);
+            return ParseFile(fileStream);
+        }
 
+        public static IEnumerable<Transaction> ParseFile(FileStream fileStream)
+        {
             using (StreamReader reader = new StreamReader(fileStream))
             {
                 string textRead = reader.ReadLine();
