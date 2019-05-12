@@ -14,14 +14,14 @@
 
         public TransactionsController(ApplicationDatabaseContext context)
         {
-            applicationDatabase = context;
+            this.applicationDatabase = context;
         }
 
         [HttpGet]
         [ProducesResponseType(typeof(List<Transaction>), StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Transaction>> Get()
         {
-            return Ok(new List<Transaction>(applicationDatabase.Transactions.ToList()));
+            return this.Ok(new List<Transaction>(this.applicationDatabase.Transactions.ToList()));
         }
 
         [HttpGet("{id}")]
@@ -29,14 +29,14 @@
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Get(int id)
         {
-            var transaction = applicationDatabase.Transactions.Where(t => t.Id == id).SingleOrDefault();
+            var transaction = this.applicationDatabase.Transactions.Where(t => t.Id == id).SingleOrDefault();
 
             if (transaction == null)
             {
                 return NotFound();
             }
 
-            return Ok(transaction);
+            return this.Ok(transaction);
         }
     }
 }
