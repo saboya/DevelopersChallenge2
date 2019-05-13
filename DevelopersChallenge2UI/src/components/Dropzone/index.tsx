@@ -8,15 +8,14 @@ import UploadIcon from '../Icons/Upload'
 require('./style.css')
 
 interface Props {
+  accept?: string,
   className?: React.HTMLAttributes<any>['className'],
+  files: File[],
   onFilesAccepted?: (acceptedFiles: File[]) => void,
   onFilesRejected?: (rejectedFiles: File[]) => void,
-  onFilesAdded?: (files: File[]) => void,
 }
 
 const Component: React.FunctionComponent<Props> = (props) => {
-  const [files, setFiles] = React.useState<File[]>([])
-
   const onDrop = React.useCallback((acceptedFiles: File[], rejectedFiles: File[]) => {
     if (props.onFilesAccepted && acceptedFiles.length > 0) {
       props.onFilesAccepted(acceptedFiles)
@@ -25,16 +24,12 @@ const Component: React.FunctionComponent<Props> = (props) => {
     if (props.onFilesRejected && rejectedFiles.length > 0) {
       props.onFilesRejected(rejectedFiles)
     }
-
-    setFiles(prevFiles => prevFiles.concat(acceptedFiles))
   }, [])
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({
-    accept: '.ofx',
+    accept: props.accept,
     onDrop,
   })
-
-  React.useEffect(() => props.onFilesAdded && props.onFilesAdded(files), [files])
 
   return (
     <div>
@@ -48,7 +43,7 @@ const Component: React.FunctionComponent<Props> = (props) => {
         }
       </div>
       <List className='selectedFilesList' horizontal>
-        {files.map((file, i) => (
+        {props.files.map((file, i) => (
           <List.Item className='selectedFilesListItem' key={i}>
             <List.Content>
               <FileIcon width={48} height={48} />
