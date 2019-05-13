@@ -1,0 +1,39 @@
+version: "3.6"
+
+services:
+  ui:
+    build:
+      context: "./DevelopersChallenge2UI"
+      dockerfile: "Dockerfile"
+      target: development
+    environment:
+      NIBO_API_HOST: "http://localhost"
+      NIBO_API_PORT: ":5023"
+    command: sh -c "yarn dev"
+    ports:
+      - "8080:8080"
+    volumes:
+      - type: bind
+        source: "./DevelopersChallenge2UI"
+        target: "/ui"
+    depends_on:
+      - "api-service"
+    links:
+      - "api-service"
+
+  api-service:
+    build:
+      context: "./DevelopersChallenge2Api"
+      dockerfile: "Dockerfile"
+      target: base
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "http://*:5023"
+      DEVELOPERCHALLENGEAPI_ConnectionStrings__ApplicationDatabase: "DataSource=:memory:"
+    command: sh -c "dotnet watch run --no-launch-profile"
+    ports:
+      - "5023:5023"
+    volumes:
+      - type: bind
+        source: "./DevelopersChallenge2Api"
+        target: "/api"
