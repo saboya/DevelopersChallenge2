@@ -40,7 +40,7 @@
 
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Migrate().Seed().Run();
+            CreateWebHostBuilder(args).Build().Migrate().Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
