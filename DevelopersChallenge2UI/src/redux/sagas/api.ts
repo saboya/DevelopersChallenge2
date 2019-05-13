@@ -13,6 +13,28 @@ const defaultOptions: RequestInit = {
   method: 'GET',
 }
 
+function * uploadOfxFilesActionHandler (apiUrl: string, action: ActionType<typeof TransactionActions.uploadRequest>) {
+  const formData = new FormData();
+
+  action.payload.map((file, index) => {
+    formData.append('files', file);
+  });
+
+  const requestInit = {
+    method: 'POST',
+    body: formData,
+  }
+
+  try {
+    const response = yield call(fetch, apiUrl + '/api/transactions/upload_ofx_files', requestInit)
+    const transactions = (yield response.json()) as Transaction[]
+
+    yield put(TransactionActions.uploadSuccess(transactions))
+  } catch(e) {
+    console.log(e)
+  }
+}
+
 function * listActionHandler (apiUrl: string, action: ActionType<typeof TransactionActions.listRequest>): SagaIterator {
   const response = yield call(fetch, apiUrl + '/api/transactions', defaultOptions)
 
@@ -20,6 +42,7 @@ function * listActionHandler (apiUrl: string, action: ActionType<typeof Transact
 }
 
 function * NiboApiRequestsaga (apiUrl: string) {
+  yield takeEvery(getType(TransactionActions.uploadRequest), uploadOfxFilesActionHandler, apiUrl)
   yield takeEvery(getType(TransactionActions.listRequest), listActionHandler, apiUrl)
 }
 
