@@ -7,7 +7,7 @@ import {
 
 import 'semantic-ui-css/semantic.min.css'
 
-import DropZone from '../components/Dropzone'
+import FileUpload from './FileUpload'
 import Transactions from './Transactions'
 
 const logoNibo = require('../static/img/logo-nibo.png')
@@ -39,7 +39,7 @@ const Component: React.FunctionComponent = (props) => {
         </Menu>
       </Container>
       <Container>
-        <DropZone />
+        <FileUpload />
       </Container>
       <Header as='h3' content='Transações' style={style.h3} textAlign='center' />
       <Container>

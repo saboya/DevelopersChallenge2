@@ -1,4 +1,8 @@
-.uploadBox {
+.dropzone__Container {
+  position: relative;
+}
+
+.dropzone__uploadBox {
   background-color: transparent;
   color: #009c95;
   cursor: pointer;
@@ -9,17 +13,26 @@
   text-align: center;
 }
 
-.uploadBox:hover {
+.dropzone__uploadBox:hover {
   background-color: rgba(0, 156, 149, 0.1);
 }
 
-.uploadBox svg {
+.dropzone__uploadBox svg {
   fill: #009c95;
 }
 
-.selectedFilesList {
+.dropzone__selectedFilesList {
+  position: absolute;
+  top: 16px;
+  left: 16px;
 }
 
-.selectedFilesListItem {
+.dropzone__selectedFilesListItem {
   text-align: center;
+}
+
+.dropzone__Controls {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
 }
