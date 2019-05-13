@@ -5,6 +5,7 @@ import {
 } from 'semantic-ui-react'
 import { connect } from 'react-redux';
 
+import { useCurrency } from '../util/useCurrency'
 import { StoreState } from '../redux/store'
 
 import './style.css'
@@ -19,6 +20,8 @@ interface Props {}
 type ConnectedProps = ReturnType<typeof mapStateToProps>
 
 const Component: React.FunctionComponent<Props> = (props: Props & ConnectedProps) => {
+  const [currencyFormatter] = useCurrency({ currency: 'BRL' })
+
   return (
     <Container>
       <Table celled>
@@ -35,7 +38,17 @@ const Component: React.FunctionComponent<Props> = (props: Props & ConnectedProps
             <Table.Row key={id}>
               <Table.Cell>{props.transactionsById[id].timestamp}</Table.Cell>
               <Table.Cell>{props.transactionsById[id].description}</Table.Cell>
-              <Table.Cell><span className={props.transactionsById[id].amount > 0 ? 'transaction__Amount__Positive' : 'transaction__Amount__Negative'}>{props.transactionsById[id].amount}</span></Table.Cell>
+              <Table.Cell>
+                <span
+                  className={
+                    props.transactionsById[id].amount > 0
+                      ? 'transaction__Amount__Positive'
+                      : 'transaction__Amount__Negative'
+                  }
+                >
+                  {currencyFormatter(props.transactionsById[id].amount)}
+                </span>
+              </Table.Cell>
               <Table.Cell>{props.transactionsById[id].operationType}</Table.Cell>
             </Table.Row>
           ))}
