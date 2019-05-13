@@ -31,10 +31,10 @@ const Component: React.FunctionComponent<Props> = (props: Props & ConnectedProps
         <Table.Body>
           {props.transactions.map(id => (
             <Table.Row key={id}>
-              <Table.Cell>Data</Table.Cell>
+              <Table.Cell>{props.transactionsById[id].timestamp}</Table.Cell>
               <Table.Cell>{props.transactionsById[id].description}</Table.Cell>
               <Table.Cell>{props.transactionsById[id].amount}</Table.Cell>
-              <Table.Cell>Tipo</Table.Cell>
+              <Table.Cell>{props.transactionsById[id].operationType}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
