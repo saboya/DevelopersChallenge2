@@ -44,10 +44,8 @@
         [HttpPost("upload_ofx_files")]
         public async Task<IActionResult> Post(List<IFormFile> files)
         {
-            var filePath = Path.GetTempFileName();
-
             var transactions = files
-                .Select(file => Util.OfxParser.ParseFile(new FileStream(filePath, FileMode.Create)))
+                .Select(file => Util.OfxParser.ParseFile(file.OpenReadStream()))
                 .Aggregate((acc, t) => acc.Concat(t))
                 .OrderBy(t => t.Timestamp);
 

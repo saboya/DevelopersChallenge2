@@ -46,9 +46,9 @@ namespace DevelopersChallenge2Api.Util
             return ParseFile(fileStream);
         }
 
-        public static IEnumerable<Transaction> ParseFile(FileStream fileStream)
+        public static IEnumerable<Transaction> ParseFile(Stream stream)
         {
-            using (StreamReader reader = new StreamReader(fileStream))
+            using (StreamReader reader = new StreamReader(stream))
             {
                 string textRead = reader.ReadLine();
                 Match firstLineMatch = HeaderRegex.Match(textRead);
