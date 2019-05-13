@@ -22,6 +22,7 @@ const addTransactionReducer = (state: TransactionState, transaction: Transaction
 const reducer = (state: TransactionState = initialState, action: TransactionActionTypes) => {
   switch (action.type) {
     case getType(TransactionActions.listSuccess):
+    case getType(TransactionActions.uploadSuccess):
       return action.payload.reduce(addTransactionReducer, state)
   }
 
