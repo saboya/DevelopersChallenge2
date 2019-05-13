@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 
 import { StoreState } from '../redux/store'
 
+import './style.css'
+
 const mapStateToProps = (state: StoreState) => ({
   transactions: state.transaction.list,
   transactionsById: state.transaction.byId,
@@ -33,7 +35,7 @@ const Component: React.FunctionComponent<Props> = (props: Props & ConnectedProps
             <Table.Row key={id}>
               <Table.Cell>{props.transactionsById[id].timestamp}</Table.Cell>
               <Table.Cell>{props.transactionsById[id].description}</Table.Cell>
-              <Table.Cell>{props.transactionsById[id].amount}</Table.Cell>
+              <Table.Cell><span className={props.transactionsById[id].amount > 0 ? 'transaction__Amount__Positive' : 'transaction__Amount__Negative'}>{props.transactionsById[id].amount}</span></Table.Cell>
               <Table.Cell>{props.transactionsById[id].operationType}</Table.Cell>
             </Table.Row>
           ))}

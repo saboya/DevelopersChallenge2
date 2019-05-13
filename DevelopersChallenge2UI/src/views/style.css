@@ -1,0 +1,7 @@
+.transaction__Amount__Positive {
+  color: #279321;
+}
+
+.transaction__Amount__Negative {
+  color: #ca111f;
+}
