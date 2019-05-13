@@ -2,7 +2,7 @@ import { ActionType, createAction } from 'typesafe-actions'
 import Transaction from '../types/Transaction'
 
 const LIST_REQUEST = '@nibo/transaction/LIST_REQUEST'
-const LIST_SUCCESS = '@nibp/transaction/LIST_SUCCESS'
+const LIST_SUCCESS = '@nibo/transaction/LIST_SUCCESS'
 
 export const TransactionActions = {
   listRequest: createAction(LIST_REQUEST, resolve => {
