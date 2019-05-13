@@ -1,7 +1,9 @@
 ﻿namespace DevelopersChallenge2Api.Controllers
 {
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using DevelopersChallenge2Api.Models;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -37,6 +39,33 @@
             }
 
             return this.Ok(transaction);
+        }
+
+        [HttpPost("upload_ofx_files")]
+        public async Task<IActionResult> Post(List<IFormFile> files)
+        {
+            var filePath = Path.GetTempFileName();
+
+            var transactions = files
+                .Select(file => Util.OfxParser.ParseFile(new FileStream(filePath, FileMode.Create)))
+                .Aggregate((acc, t) => acc.Concat(t))
+                .OrderBy(t => t.Timestamp);
+
+            using (var dbTransaction = this.applicationDatabase.Database.BeginTransaction())
+            {
+                try
+                {
+                    this.applicationDatabase.Transactions.AddRange(transactions);
+                    applicationDatabase.SaveChanges();
+                    dbTransaction.Commit();
+                }
+                catch
+                {
+                    dbTransaction.Rollback();
+                }
+            }
+
+            return Ok(transactions);
         }
     }
 }
