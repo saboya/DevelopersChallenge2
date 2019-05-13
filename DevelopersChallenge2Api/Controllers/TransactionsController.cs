@@ -47,6 +47,7 @@
             var transactions = files
                 .Select(file => Util.OfxParser.ParseFile(file.OpenReadStream()))
                 .Aggregate((acc, t) => acc.Concat(t))
+                .Distinct(new Util.TransactionComparer())
                 .OrderBy(t => t.Timestamp);
 
             using (var dbTransaction = this.applicationDatabase.Database.BeginTransaction())
