@@ -57,6 +57,7 @@
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors("AllowAll");
             }
             else
             {
@@ -64,8 +65,6 @@
                 app.UseHsts();
                 app.UseHttpsRedirection();
             }
-
-            app.UseCors("AllowAll");
 
             app.UseMvc();
         }
