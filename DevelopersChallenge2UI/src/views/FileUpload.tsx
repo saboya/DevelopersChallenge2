@@ -28,6 +28,7 @@ const Component: React.FunctionComponent<Props> = (props: Props & ConnectedProps
   const onSendFilesClick = React.useCallback(() => {
     if (files.length > 0) {
       props.uploadRequest(files)
+      setFiles([])
     }
   }, [files])
 
