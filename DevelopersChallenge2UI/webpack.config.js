@@ -1,7 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const DotenvWebpack = require('dotenv-webpack')
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
@@ -127,8 +126,10 @@ module.exports = (env, argv) => {
       },
     },
     plugins: [
-      new webpack.EnvironmentPlugin(['NIBO_API_HOST', 'NIBO_API_PORT']),
-      new DotenvWebpack(),
+      new webpack.EnvironmentPlugin({
+        'NIBO_API_HOST': '//localhost',
+        'NIBO_API_PORT': ':5000',
+      }),
       new MiniCssExtractPlugin({
         filename: 'css/base.[hash].css',
       }),
