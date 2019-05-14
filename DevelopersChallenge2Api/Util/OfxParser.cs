@@ -125,7 +125,8 @@ namespace DevelopersChallenge2Api.Util
                     case "DTPOSTED":
                         var dateMatch = DateTimeRegexp.Match(value);
 
-                        if (!match.Success) {
+                        if (!match.Success)
+                        {
                             throw new Exception("Invalid date format");
                         }
 
