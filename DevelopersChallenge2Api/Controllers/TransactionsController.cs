@@ -23,7 +23,7 @@
         [ProducesResponseType(typeof(List<Transaction>), StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Transaction>> Get()
         {
-            return this.Ok(new List<Transaction>(this.applicationDatabase.Transactions.ToList()));
+            return this.Ok(new List<Transaction>(this.applicationDatabase.Transactions.OrderBy(t => t.Timestamp).ToList()));
         }
 
         [HttpGet("{id}")]
