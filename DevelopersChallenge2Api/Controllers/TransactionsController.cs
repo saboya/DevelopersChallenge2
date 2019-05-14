@@ -52,19 +52,29 @@
 
             using (var dbTransaction = this.applicationDatabase.Database.BeginTransaction())
             {
-                try
+                foreach (var transaction in transactions)
                 {
-                    this.applicationDatabase.Transactions.AddRange(transactions);
-                    applicationDatabase.SaveChanges();
-                    dbTransaction.Commit();
+                    try
+                    {
+                        this.applicationDatabase.Transactions.Add(transaction);
+                        applicationDatabase.SaveChanges();
+                    }
+                    catch (System.Exception e)
+                    {
+                        if (e.InnerException.GetType() == typeof(Microsoft.Data.Sqlite.SqliteException))
+                        {
+                            if (!e.InnerException.Message.StartsWith("SQLite Error 19: 'UNIQUE constraint failed"))
+                            {
+                                throw e;
+                            }
+                        }
+                    }
                 }
-                catch
-                {
-                    dbTransaction.Rollback();
-                }
-            }
 
-            return Ok(transactions);
+                dbTransaction.Commit();
+
+                return Ok(transactions);
+            }
         }
     }
 }
