@@ -1,7 +1,7 @@
 import { fork, put } from 'redux-saga/effects'
 import NiboApiRequestsaga from './api'
 
-import { TransactionActions } from '../actions';
+import { BalanceActions, TransactionActions } from '../actions';
 
 export const NIBO_API_URL = (
   (process.env.NIBO_API_HOST || ('//' + window.location.hostname))
@@ -10,6 +10,7 @@ export const NIBO_API_URL = (
 
 function * NiboAppSaga () {
   yield fork(NiboApiRequestsaga, NIBO_API_URL)
+  yield put(BalanceActions.listRequest())
   yield put(TransactionActions.listRequest())
 }
 

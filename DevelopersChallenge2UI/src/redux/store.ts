@@ -2,15 +2,17 @@ import { applyMiddleware, createStore, combineReducers, Middleware } from 'redux
 import createSagaMiddleware from 'redux-saga'
 import { StateType } from 'typesafe-actions'
 
-import { TransactionActionTypes } from './actions'
+import { BalanceActionTypes, TransactionActionTypes } from './actions'
+import BalanceReducer from './reducers/balance'
 import TransactionReducer from './reducers/transaction'
 import AppSaga from './sagas/app'
 
 const reducers = {
+  balance: BalanceReducer,
   transaction: TransactionReducer,
 }
 
-export type RootActionsType = TransactionActionTypes
+export type RootActionsType = BalanceActionTypes | TransactionActionTypes
 
 export type StoreState = StateType<typeof reducers>
 
