@@ -23,6 +23,9 @@ const style = {
   topContainer: {
     marginTop: '2em',
   },
+  bottomContainer: {
+    marginBottom: '4em',
+  }
 }
 
 const Component: React.FunctionComponent = (props) => {
@@ -33,16 +36,13 @@ const Component: React.FunctionComponent = (props) => {
           <Menu.Item>
             <img src={logoNibo} />
           </Menu.Item>
-          <Menu.Item>Transações</Menu.Item>
-          <Menu.Item>Upload</Menu.Item>
-          <Menu.Item>Sobre</Menu.Item>
         </Menu>
       </Container>
       <Container>
         <FileUpload />
       </Container>
       <Header as='h3' content='Transações' style={style.h3} textAlign='center' />
-      <Container>
+      <Container style={style.bottomContainer}>
         <Transactions />
       </Container>
     </>
