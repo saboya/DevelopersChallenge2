@@ -1,6 +1,6 @@
 export default interface Balance {
   id: string
-  timestamp: string
+  timestamp: number
   amount: number
   bankId: string
   acctId: string

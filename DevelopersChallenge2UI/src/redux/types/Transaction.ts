@@ -1,6 +1,6 @@
 export default interface Transaction {
   id: string
-  timestamp: string
+  timestamp: number
   description: string
   amount: number
   operationType: 'DEBIT' | 'CREDIT'
