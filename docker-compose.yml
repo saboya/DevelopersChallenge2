@@ -30,7 +30,8 @@ services:
       ASPNETCORE_ENVIRONMENT: "Development"
       ASPNETCORE_URLS: "http://*:5023"
       DEVELOPERCHALLENGEAPI_ConnectionStrings__ApplicationDatabase: "DataSource=:memory:"
-    command: sh -c "dotnet watch run --no-launch-profile"
+    working_dir: "/api"
+    command: sh -c "dotnet watch run --project /api --no-launch-profile"
     ports:
       - "5023:5023"
     volumes:
