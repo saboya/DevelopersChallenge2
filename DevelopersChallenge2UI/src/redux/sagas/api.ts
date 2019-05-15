@@ -26,7 +26,7 @@ function * uploadOfxFilesActionHandler (apiUrl: string, action: ActionType<typeo
   }
 
   try {
-    const response = (yield call(fetch, apiUrl + '/api/transactions/upload_ofx_files', requestInit)) as Response
+    const response = (yield call(fetch, apiUrl + '/api/ofx/uploadFiles', requestInit)) as Response
     if (response.ok) {
       yield put(TransactionActions.uploadSuccess([]))
       yield put(TransactionActions.listRequest())
