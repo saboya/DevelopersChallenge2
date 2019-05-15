@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DevelopersChallenge2Api.Migrations
 {
@@ -13,7 +12,7 @@ namespace DevelopersChallenge2Api.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Timestamp = table.Column<DateTime>(nullable: false),
+                    Timestamp = table.Column<long>(nullable: false),
                     Amount = table.Column<double>(nullable: false),
                     BankId = table.Column<string>(nullable: true),
                     AcctId = table.Column<string>(nullable: true),
@@ -30,7 +29,7 @@ namespace DevelopersChallenge2Api.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Timestamp = table.Column<DateTime>(nullable: false),
+                    Timestamp = table.Column<long>(nullable: false),
                     Amount = table.Column<double>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     OperationType = table.Column<string>(nullable: true),

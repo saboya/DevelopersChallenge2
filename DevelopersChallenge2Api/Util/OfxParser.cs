@@ -133,16 +133,7 @@ namespace DevelopersChallenge2Api.Util
                         transaction.OperationType = value;
                         break;
                     case "DTPOSTED":
-                        var dateMatch = DateTimeRegexp.Match(value);
-
-                        if (!match.Success)
-                        {
-                            throw new Exception("Invalid date format");
-                        }
-
-                        transaction.Timestamp = DateTime
-                            .ParseExact(dateMatch.Groups[1].Value, DateFormat, CultureInfo.InvariantCulture)
-                            .AddHours(double.Parse(dateMatch.Groups[2].Value));
+                        transaction.Timestamp = OfxDateStringToUnixTimeSeconds(value);
                         break;
                     case "TRNAMT":
                         transaction.Amount = double.Parse(value);
@@ -154,6 +145,23 @@ namespace DevelopersChallenge2Api.Util
             }
 
             return transaction;
+        }
+
+        protected static long OfxDateStringToUnixTimeSeconds(string ofxDateString)
+        {
+            var dateMatch = DateTimeRegexp.Match(ofxDateString);
+
+            if (!dateMatch.Success)
+            {
+                throw new Exception("Invalid date format");
+            }
+
+            DateTime dateTime = DateTime
+                .ParseExact(dateMatch.Groups[1].Value, DateFormat, CultureInfo.InvariantCulture)
+                .AddHours(double.Parse(dateMatch.Groups[2].Value));
+
+            DateTimeOffset offset = new DateTimeOffset(dateTime);
+            return offset.ToUnixTimeSeconds();
         }
 
         protected static string ParseCurrency(string text)
@@ -229,16 +237,7 @@ namespace DevelopersChallenge2Api.Util
                             bankSection.Balance.Amount = double.Parse(value);
                             break;
                         case "DTASOF":
-                            var dateMatch = DateTimeRegexp.Match(value);
-
-                            if (!match.Success)
-                            {
-                                throw new Exception("Invalid date format");
-                            }
-
-                            bankSection.Balance.Timestamp = DateTime
-                            .ParseExact(dateMatch.Groups[1].Value, DateFormat, CultureInfo.InvariantCulture)
-                            .AddHours(double.Parse(dateMatch.Groups[2].Value));
+                            bankSection.Balance.Timestamp = OfxDateStringToUnixTimeSeconds(value);
                             break;
                     }
                 }
