@@ -13,8 +13,8 @@ namespace DevelopersChallenge2Api.Util
         private static readonly string DateFormat = "yyyyMMddHHmmss";
 
         private static readonly Regex DateTimeRegexp = new Regex(
-            @"^(\d+)\[(.*?):\w+\]$",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+            @"(\d+)\[(.*?):\w+\]",
+            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.CultureInvariant);
 
         private static readonly Regex CurrencyRegexp = new Regex(
             @"<CURDEF>(.*?)\n",
