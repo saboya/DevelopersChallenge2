@@ -33,11 +33,11 @@ namespace DevelopersChallenge2Api.Controllers
 
             using (var dbTransaction = this.applicationDatabase.Database.BeginTransaction())
             {
-                foreach (var balance in bankSections.Select(b => b.Balance))
+                foreach (var transaction in transactions)
                 {
                     try
                     {
-                        this.applicationDatabase.Balances.Add(balance);
+                        this.applicationDatabase.Transactions.Add(transaction);
                         applicationDatabase.SaveChanges();
                     }
                     catch (System.Exception e)
@@ -52,11 +52,11 @@ namespace DevelopersChallenge2Api.Controllers
                     }
                 }
 
-                foreach (var transaction in transactions)
+                foreach (var balance in bankSections.Select(b => b.Balance))
                 {
                     try
                     {
-                        this.applicationDatabase.Transactions.Add(transaction);
+                        this.applicationDatabase.Balances.Add(balance);
                         applicationDatabase.SaveChanges();
                     }
                     catch (System.Exception e)
