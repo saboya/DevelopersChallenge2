@@ -16,6 +16,18 @@ namespace DevelopersChallenge2Api.Util
             @"^(\d+)\[(.*?):\w+\]$",
             RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
+        private static readonly Regex CurrencyRegexp = new Regex(
+            @"<CURDEF>(.*?)\n",
+            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.CultureInvariant);
+
+        private static readonly Regex BankAccountRegex = new Regex(
+            @"<BANKACCTFROM>(.*?)</BANKACCTFROM>",
+            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.CultureInvariant);
+
+        private static readonly Regex LedgerRegex = new Regex(
+            @"<LEDGERBAL>(.*?)</LEDGERBAL>",
+            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.CultureInvariant);
+
         private static readonly Regex BankSectionRegex = new Regex(
             @"<STMTTRNRS>(.*?)</STMTTRNRS>",
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.CultureInvariant);
@@ -24,7 +36,7 @@ namespace DevelopersChallenge2Api.Util
             @"<STMTTRN>(.*?)</STMTTRN>",
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.CultureInvariant);
 
-        private static readonly Regex TransactionFieldsRegex = new Regex(
+        private static readonly Regex FlatFieldsRegex = new Regex(
             @"<(.*?)>(.*?)\n",
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.CultureInvariant);
 
@@ -40,13 +52,13 @@ namespace DevelopersChallenge2Api.Util
             }
         }
 
-        public static IEnumerable<Transaction> ParseFile(string filePath)
+        public static IEnumerable<BankSection> ParseFile(string filePath)
         {
             FileStream fileStream = new FileStream(filePath, FileMode.Open);
             return ParseFile(fileStream);
         }
 
-        public static IEnumerable<Transaction> ParseFile(Stream stream)
+        public static IEnumerable<BankSection> ParseFile(Stream stream)
         {
             using (StreamReader reader = new StreamReader(stream))
             {
@@ -67,10 +79,8 @@ namespace DevelopersChallenge2Api.Util
 
                 textRead = reader.ReadToEnd();
 
-                return (from match in BankSectionRegex.Matches(textRead)
-                    select ParseBankSection(match.Groups[1].Value))
-                    .Aggregate((acc, t) => acc.Concat(t))
-                    .OrderBy(t => t.Id);
+                return BankSectionRegex.Matches(textRead)
+                    .Select(match => ParseBankSection(match.Groups[1].Value));
             }
         }
 
@@ -112,7 +122,7 @@ namespace DevelopersChallenge2Api.Util
         {
             var transaction = new Transaction();
 
-            foreach (Match match in TransactionFieldsRegex.Matches(text))
+            foreach (Match match in FlatFieldsRegex.Matches(text))
             {
                 var field = match.Groups[1].Value;
                 var value = match.Groups[2].Value;
@@ -146,10 +156,95 @@ namespace DevelopersChallenge2Api.Util
             return transaction;
         }
 
-        protected static IEnumerable<Transaction> ParseBankSection(string text)
+        protected static string ParseCurrency(string text)
         {
-            return from match in TransactionRegex.Matches(text)
-                select ParseTransaction(match.Groups[1].Value);
+            string currency = string.Empty;
+
+            var currencyMatch = CurrencyRegexp.Match(text);
+
+            if (currencyMatch.Success)
+            {
+                currency = currencyMatch.Groups[1].Value;
+            }
+
+            return currency;
+        }
+
+        protected static BankSection ParseBankSection(string text)
+        {
+            string currency = ParseCurrency(text);
+            string acctId = string.Empty;
+            string bankId = string.Empty;
+
+            var backAccountMatch = BankAccountRegex.Match(text);
+
+            if (backAccountMatch.Success)
+            {
+                foreach (Match match in FlatFieldsRegex.Matches(text))
+                {
+                    var field = match.Groups[1].Value;
+                    var value = match.Groups[2].Value;
+
+                    switch (field)
+                    {
+                        case "BANKID":
+                            bankId = value;
+                            break;
+                        case "ACCTID":
+                            acctId = value;
+                            break;
+                    }
+                }
+            }
+
+            BankSection bankSection = new BankSection();
+            bankSection.Balance = new Balance();
+            bankSection.Balance.AcctId = acctId;
+            bankSection.Balance.BankId = bankId;
+            bankSection.Balance.Currency = currency;
+
+            bankSection.Transactions = TransactionRegex.Matches(text)
+                .Select(match =>
+                {
+                    var transaction = ParseTransaction(match.Groups[1].Value);
+
+                    transaction.AcctId = acctId;
+                    transaction.BankId = bankId;
+                    transaction.Currency = currency;
+
+                    return transaction;
+                });
+
+            var ledgerMatch = LedgerRegex.Match(text);
+            if (ledgerMatch.Success)
+            {
+                foreach (Match match in FlatFieldsRegex.Matches(text))
+                {
+                    var field = match.Groups[1].Value;
+                    var value = match.Groups[2].Value;
+
+                    switch (field)
+                    {
+                        case "BALAMT":
+                            bankSection.Balance.Amount = double.Parse(value);
+                            break;
+                        case "DTASOF":
+                            var dateMatch = DateTimeRegexp.Match(value);
+
+                            if (!match.Success)
+                            {
+                                throw new Exception("Invalid date format");
+                            }
+
+                            bankSection.Balance.Timestamp = DateTime
+                            .ParseExact(dateMatch.Groups[1].Value, DateFormat, CultureInfo.InvariantCulture)
+                            .AddHours(double.Parse(dateMatch.Groups[2].Value));
+                            break;
+                    }
+                }
+            }
+
+            return bankSection;
         }
     }
 }

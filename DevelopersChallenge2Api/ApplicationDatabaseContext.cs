@@ -10,10 +10,16 @@ namespace DevelopersChallenge2Api
 
         public DbSet<Transaction> Transactions { get; set; }
 
+        public DbSet<Balance> Balances { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Transaction>()
-                .HasIndex(t => new { t.Timestamp, t.Description, t.Amount })
+                .HasIndex(t => new { t.Timestamp, t.Description, t.Amount, t.BankId, t.AcctId })
+                .IsUnique();
+
+            builder.Entity<Balance>()
+                .HasIndex(b => new { b.Timestamp, b.AcctId, b.BankId })
                 .IsUnique();
         }
     }
